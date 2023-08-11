@@ -1,0 +1,6 @@
+simNo
+sim
+basic.bin
+basic.bin.elf
+src/*.o
+*.o
