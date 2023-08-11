@@ -1,4 +1,5 @@
-#include <stdint.h>
+#include "command_struct.h"
+#include "stdint.h"
 
 /* 68Katy memory map
  *
@@ -22,17 +23,12 @@
 #define VERSION      "v0.1"
 #define BUFF_SIZE    100
 
-extern char put_string(char *c);
-extern char put_char(char c);
+extern char put_string(const char *c);
+extern char put_char(const char c);
 extern char read_char();
+extern void init_commands();
 
-typedef struct
-{
-   const char *name;
-   void (*fun)(int args, char *argv)
-} command;
-
-#define COMMND_COUNT    3
+extern command COMMAND_LIST[COMMAND_COUNT];
 
 int strcomp(const char *str1, const char *str2)
 {
@@ -45,21 +41,15 @@ int strcomp(const char *str1, const char *str2)
    return(*str1 - *str2);
 }
 
-void run_command(char *buf)
-{
-}
-
 void parse_line(char *buff)
 {
-}
-
-int get_command(const char *name, command *cmd)
-{
-   for (int i = 0; i < COMMND_COUNT; i++)
+   uint8_t args;
+   char ** argv;
+   for (int i = 0; i < COMMAND_COUNT; ++i)
    {
-      if (strcomp(name, COMMAND_LIST[i].name))
+      if (strcomp(COMMAND_LIST[i].name, buff) == 0)
       {
-         *cmd = COMMAND_LIST[i];
+         COMMAND_LIST[i].fun(args, argv);
       }
    }
 }
@@ -76,13 +66,17 @@ void read_line(char *buff, uint8_t max)
          buff[i++] = '\0';
          if (strcomp(buff, "help") == 0)
          {
-            for (int i = 0; i < COMMND_COUNT; ++i)
+            for (int c = 0; c < COMMAND_COUNT; ++c)
             {
-               put_string(COMMAND_LIST[i].name);
+               put_string(COMMAND_LIST[c].name);
+               put_char('\n');
             }
          }
-         parse_line(buff);
-         break;
+         else
+         {
+            parse_line(buff);
+         }
+         return;
 
       default:
          put_char(buff[i]);
@@ -94,7 +88,6 @@ void serial_loop()
 {
    char *buff;
 
-
    while (1)
    {
       put_string("> ");
@@ -102,21 +95,9 @@ void serial_loop()
    }
 }
 
-command create_command(const char *name, void (*fun)(int args, char *argv))
-{
-   command cmd;
-   cmd.name = name;
-   cmd.fun = fun;
-   return(cmd);
-}
-
-void version_command(int args, char *argv)
-{
-   put_string(VERSION);
-}
-
 int main()
 {
+   init_commands();
    put_string("\n\nWELCOME TO CMD\n\n");
 
    serial_loop();

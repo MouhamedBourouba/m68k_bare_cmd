@@ -4,3 +4,5 @@ basic.bin
 basic.bin.elf
 src/*.o
 *.o
+compile_commands.json
+.cache

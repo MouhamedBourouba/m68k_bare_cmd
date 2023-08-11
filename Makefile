@@ -8,7 +8,7 @@ include $(ROOT)/config.mk
 
 ASLISTING    = -alh
 
-HELLO_OBJS   = src/crt0.o  src/main.o src/vectors.o src/tty.o
+HELLO_OBJS   = src/crt0.o  src/main.o src/vectors.o src/tty.o src/command.c
 
 all: basic.bin 
 

@@ -32,7 +32,7 @@ void wait_write()
    }
 }
 
-char put_char(char c)
+char put_char(const char c)
 {
    wait_write();
    M68KATY_SERIAL_OUT = c;
