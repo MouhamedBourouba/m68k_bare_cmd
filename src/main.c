@@ -50,8 +50,10 @@ void parse_line(char *buff)
       if (strcomp(COMMAND_LIST[i].name, buff) == 0)
       {
          COMMAND_LIST[i].fun(args, argv);
+         return;
       }
    }
+   put_string("UNKNOWN COMMAND, type help to get command list");
 }
 
 void read_line(char *buff, uint8_t max)
